@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Практична робота — Списки в Python</title>
+<style>
+:root{--ink:#202938;--muted:#64748b;--accent:#285c9f;--pale:#edf4fc;--line:#dbe3ed;--paper:#fff;--bg:#f3f6fa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#173b68,#3979b9);color:white;padding:34px 20px}
+.wrap{max-width:980px;margin:auto;padding:0 18px}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;opacity:.85}
+h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;margin:.45rem 0}
+header p{max-width:720px;margin:.5rem 0 0;color:#e7f0fb}
+main{padding:24px 0 56px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;margin:0 0 18px;box-shadow:0 4px 16px #18324d0a}
+h2{font-size:1.25rem;margin:0 0 12px}
+h3{font-size:1.05rem;margin:0 0 8px}
+p{margin:.45rem 0}
+.muted{color:var(--muted)}
+.tag{display:inline-block;background:var(--pale);color:var(--accent);padding:3px 9px;border-radius:99px;font-size:.82rem;font-weight:650}
+.meta{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:16px}
+label{display:block;font-weight:650;font-size:.92rem;margin-bottom:5px}
+input[type=text],textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:10px 11px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:86px;resize:vertical}
+input:focus,textarea:focus{outline:3px solid #b9d5f4;border-color:var(--accent)}
+.code{background:#172333;color:#e8f1fb;border-radius:10px;padding:13px 15px;font:14px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
+.note{background:#fff8e8;border-left:4px solid #e0a12b;padding:11px 14px;border-radius:7px;margin:12px 0}
+.task{border-top:1px solid var(--line);padding-top:17px;margin-top:17px}
+.task:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.task-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.task-head h3{margin:0}
+.points{margin-left:auto;color:var(--muted);font-size:.85rem}
+.checkline{display:flex;align-items:flex-start;gap:9px;margin:10px 0;color:var(--muted);font-size:.92rem}
+.checkline input{margin-top:5px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+button{border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer}
+.primary{background:var(--accent);color:#fff}
+.secondary{background:#e7edf5;color:#24364b}
+button:hover{filter:brightness(.96)}
+.progress{height:9px;background:#e5ebf2;border-radius:99px;overflow:hidden;margin:10px 0}
+.progress>div{height:100%;width:0;background:#2e8b65;transition:width .2s}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+.small{font-size:.9rem}
+@media(max-width:650px){.meta{grid-template-columns:1fr}.card{padding:17px}}
+@media print{
+ body{background:#fff;font-size:11pt}
+ header{background:#fff!important;color:#111;padding:10px 0;border-bottom:2px solid #222}
+ header p{color:#333}
+ .wrap{max-width:none;padding:0}
+ main{padding:12px 0}
+ .card{box-shadow:none;border:1px solid #bbb;border-radius:0;padding:14px;margin-bottom:12px;break-inside:avoid}
+ .actions,.screen-only,footer{display:none!important}
+ textarea,input[type=text]{border:1px solid #888;background:#fff}
+ textarea{min-height:65px}
+ .code{background:#f1f1f1!important;color:#111!important;border:1px solid #bbb;white-space:pre-wrap}
+ .task{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <div class="eyebrow">Інформатика · 9 клас · Python</div>
+  <h1>Практична робота<br>«Створення та опрацювання списків»</h1>
+  <p>Створи список, зміни його елементи, опрацюй дані за допомогою циклів і перевір результат.</p>
+ </div>
+</header>
+<main class="wrap">
+ <section class="card">
+  <span class="tag">Перед початком</span>
+  <h2 style="margin-top:10px">Дані учня / учениці</h2>
+  <div class="meta">
+   <div><label for="student">Прізвище та ім’я</label><input id="student" type="text" placeholder="Введи своє ім’я"></div>
+   <div><label for="class">Клас</label><input id="class" type="text" placeholder="Наприклад, 9-А"></div>
+   <div><label for="date">Дата</label><input id="date" type="text" placeholder="дд.мм.рррр"></div>
+  </div>
+  <h2 style="margin-top:20px">Мета роботи</h2>
+  <p>Навчитися створювати списки в Python, звертатися до їхніх елементів за індексом, змінювати список і виконувати базову обробку даних.</p>
+  <h3 style="margin-top:16px">Пригадай</h3>
+  <div class="code">numbers = [4, 7, 2, 9]
+print(numbers[0])   # перший елемент
+numbers.append(5)   # додати в кінець
+numbers[1] = 10      # змінити елемент
+print(len(numbers)) # кількість елементів</div>
+  <div class="note"><b>Як працювати:</b> виконуй завдання у середовищі Python. Перевіряй код і результат, а короткі пояснення та відповіді записуй у поля на цій сторінці. Наприкінці збережи заповнену роботу в PDF.</div>
+ </section>
+
+ <section class="card">
+  <h2>Завдання 1. Створення списку</h2>
+  <p>Створи список <b>temperatures</b> із п’яти цілих чисел, які умовно позначають температуру повітря протягом п’яти днів.</p>
+  <ol>
+   <li>Виведи весь список.</li>
+   <li>Виведи перший і останній елементи.</li>
+   <li>Виведи кількість елементів списку.</li>
+  </ol>
+  <div class="task">
+   <label for="a1">Запиши свій код</label>
+   <textarea id="a1" placeholder="temperatures = [...]"></textarea>
+   <label for="r1" style="margin-top:10px">Які значення вивелися для першого та останнього елементів?</label>
+   <input id="r1" type="text" placeholder="Твоя відповідь">
+  </div>
+ </section>
+
+ <section class="card">
+  <h2>Завдання 2. Зміна списку</h2>
+  <p>Використай список із завдання 1.</p>
+  <ol>
+   <li>Додай до списку ще одне значення за допомогою <code>append()</code>.</li>
+   <li>Заміни третій елемент на число <b>18</b>.</li>
+   <li>Встав число <b>12</b> на початок списку за допомогою <code>insert()</code>.</li>
+   <li>Виведи оновлений список.</li>
+  </ol>
+  <div class="task">
+   <label for="a2">Запиши команди, якими ти змінив/змінила список</label>
+   <textarea id="a2" placeholder="temperatures.append(...)"></textarea>
+   <label for="r2" style="margin-top:10px">Оновлений список</label>
+   <input id="r2" type="text" placeholder="[ ... ]">
+  </div>
+ </section>
+
+ <section class="card">
+  <h2>Завдання 3. Видалення елементів</h2>
+  <p>Створи окремий список назв трьох улюблених шкільних предметів.</p>
+  <ol>
+   <li>Додай до нього ще один предмет.</li>
+   <li>Видали один елемент за значенням за допомогою <code>remove()</code>.</li>
+   <li>Видали останній елемент за допомогою <code>pop()</code>.</li>
+   <li>Виведи результат.</li>
+  </ol>
+  <div class="task">
+   <label for="a3">Запиши код</label>
+   <textarea id="a3" placeholder="subjects = [...]"></textarea>
+   <label for="r3" style="margin-top:10px">Яка різниця між remove() і pop()?</label>
+   <textarea id="r3" placeholder="Поясни своїми словами..."></textarea>
+  </div>
+ </section>
+
+ <section class="card">
+  <h2>Завдання 4. Опрацювання списку</h2>
+  <p>Дано список балів за навчальне завдання:</p>
+  <div class="code">scores = [8, 10, 6, 12, 9, 7, 11, 5]</div>
+  <ol>
+   <li>Виведи всі елементи списку в окремих рядках, використавши цикл <code>for</code>.</li>
+   <li>Знайди суму балів за допомогою <code>sum()</code>.</li>
+   <li>Знайди найбільше та найменше значення за допомогою <code>max()</code> і <code>min()</code>.</li>
+   <li>Порахуй, скільки у списку балів, більших або рівних 9.</li>
+  </ol>
+  <div class="task">
+   <label for="a4">Запиши код</label>
+   <textarea id="a4" placeholder="scores = [...]"></textarea>
+   <label for="r4" style="margin-top:10px">Запиши отримані результати: сума, максимум, мінімум, кількість балів ≥ 9</label>
+   <textarea id="r4" placeholder="Сума: ...; максимум: ..."></textarea>
+  </div>
+ </section>
+
+ <section class="card">
+  <h2>Завдання 5. Мінічелендж</h2>
+  <p>Є список витрат за п’ять днів:</p>
+  <div class="code">expenses = [45, 120, 35, 80, 60]</div>
+  <p>Створи новий список <b>big_expenses</b>, до якого потраплять лише витрати, більші за 50. Використай цикл <code>for</code> та умовний оператор <code>if</code>. Виведи новий список і його довжину.</p>
+  <div class="task">
+   <label for="a5">Запиши код</label>
+   <textarea id="a5" placeholder="big_expenses = []"></textarea>
+   <label for="r5" style="margin-top:10px">Який список утворився і скільки в ньому елементів?</label>
+   <input id="r5" type="text" placeholder="Твоя відповідь">
+  </div>
+ </section>
+
+ <section class="card">
+  <h2>Самооцінювання</h2>
+  <p class="muted small">Познач те, що вже вмієш робити самостійно.</p>
+  <label class="checkline"><input type="checkbox"> Я можу створити список і вивести його елементи.</label>
+  <label class="checkline"><input type="checkbox"> Я вмію додавати, змінювати та видаляти елементи списку.</label>
+  <label class="checkline"><input type="checkbox"> Я можу перебрати список за допомогою циклу.</label>
+  <label class="checkline"><input type="checkbox"> Я вмію знаходити суму, найбільше та найменше значення.</label>
+  <label for="reflection">Що було найпростішим, а що потребувало найбільше уваги?</label>
+  <textarea id="reflection" placeholder="Короткий висновок..."></textarea>
+  <div class="screen-only" style="margin-top:16px">
+   <div class="small muted">Виконання завдань (позначай прапорці вище — це лише твоя самооцінка)</div>
+   <div class="progress"><div id="progressBar"></div></div>
+   <div id="progressText" class="small muted">0 із 4 умінь позначено</div>
+  </div>
+ </section>
+
+ <div class="actions">
+  <button class="primary" onclick="window.print()">Зберегти роботу в PDF</button>
+  <button class="secondary" onclick="clearAnswers()">Очистити відповіді</button>
+ </div>
+ <p class="muted small screen-only">Після натискання «Зберегти роботу в PDF» у вікні друку обери принтер «Зберегти як PDF», а потім завантаж отриманий файл у Google Classroom.</p>
+</main>
+<footer>Практична робота з інформатики · 9 клас</footer>
+<script>
+function clearAnswers(){
+ if(!confirm('Очистити всі введені відповіді та позначки?')) return;
+ document.querySelectorAll('input[type=text], textarea').forEach(el=>el.value='');
+ document.querySelectorAll('input[type=checkbox]').forEach(el=>el.checked=false);
+ updateProgress();
+}
+function updateProgress(){
+ const boxes=[...document.querySelectorAll('.checkline input')];
+ const done=boxes.filter(x=>x.checked).length;
+ document.getElementById('progressBar').style.width=(done/boxes.length*100)+'%';
+ document.getElementById('progressText').textContent=done+' із '+boxes.length+' умінь позначено';
+}
+document.querySelectorAll('.checkline input').forEach(x=>x.addEventListener('change',updateProgress));
+document.getElementById('date').value=new Intl.DateTimeFormat('uk-UA').format(new Date());
+updateProgress();
+</script>
+</body>
+</html>
